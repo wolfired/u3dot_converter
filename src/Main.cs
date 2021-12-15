@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Serialization;
-using System.Text;
 
 using Mono.Options;
+using System.Text;
 
 namespace com.wolfired.u3dot_converter
 {
@@ -106,12 +107,10 @@ namespace com.wolfired.u3dot_converter
         [XmlElement("ItemGroup")]
         public List<ItemGroup> listItemGroup;
 
-        public string ToXMLString()
+        public void Save(string filesystemPath)
         {
-            StringWriter sw = new StringWriter();
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Project));
-            xmlSerializer.Serialize(sw, this);
-            return sw.ToString();
+            xmlSerializer.Serialize(new StreamWriter(filesystemPath, false, Encoding.UTF8), this, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
         }
     }
 
@@ -173,7 +172,8 @@ namespace com.wolfired.u3dot_converter
             prj_dot.listItemGroup.AddRange(prj_u3d.listItemGroup);
             prj_dot.listPropertyGroup.AddRange(prj_u3d.listPropertyGroup);
 
-            File.WriteAllText(csproj_file_dst, prj_dot.ToXMLString());
+            prj_dot.Save(csproj_file_dst);
+            // File.WriteAllText(csproj_file_dst, prj_dot.ToXMLString());
         }
     }
 }

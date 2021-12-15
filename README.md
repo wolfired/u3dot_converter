@@ -5,7 +5,7 @@ u3dot_converter
 
 ```xml
   <PropertyGroup>
-    <PackageId>u3dot.converter</PackageId>
+    <PackageId>wolfired.u3dot_converter</PackageId>
     <Version>1.0.1</Version>
     <Authors>LinkWu</Authors>
     <PackAsTool>true</PackAsTool>
@@ -39,8 +39,8 @@ rm -rf ./{bin,obj,sample} ./*.{csproj,sln}
 dotnet pack -c Release
 
 dotnet nuget push \
-./bin/u3dot.converter.1.0.1.nupkg \
--k oy2ozqlsbiwulqvlew3agm4rygd7uq7uleg2r7u6pm2cyu \
+./bin/wolfired.u3dot_converter.1.0.2.nupkg \
+-k APIKEY \
 -s https://api.nuget.org/v3/index.json
 
 ```
@@ -50,7 +50,7 @@ dotnet nuget push \
 ```bash
 dotnet build -o bin
 
-rm -rf sample && dotnet new classlib -o sample
+rm -rf sample && dotnet new classlib --framework 'netstandard2.0' -o sample
 
 ./bin/u3dot_converter \
 --cfsrc=./resource/unity_project_files/Assembly-CSharp.csproj \
