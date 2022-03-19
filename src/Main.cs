@@ -43,6 +43,13 @@ namespace com.wolfired.u3dot_converter
                 public string value;
             }
 
+            [XmlRoot("CopyLocalLockFileAssemblies")]
+            public class CopyLocalLockFileAssemblies
+            {
+                [XmlText]
+                public bool value;
+            }
+
             [XmlElement("TargetFramework")]
             public List<TargetFramework> listTargetFramework;
 
@@ -50,6 +57,9 @@ namespace com.wolfired.u3dot_converter
             public List<LangVersion> listLangVersion;
             [XmlElement("DefineConstants")]
             public List<DefineConstants> listDefineConstants;
+
+            [XmlElement("CopyLocalLockFileAssemblies")]
+            public List<CopyLocalLockFileAssemblies> listCopyLocalLockFileAssemblies;
         }
 
         [XmlRoot("ItemGroup")]
@@ -147,6 +157,7 @@ namespace com.wolfired.u3dot_converter
 
             var prj_u3d = Project.Load(csproj_file_src, namespace_src);
             var prj_dot = Project.Load(csproj_file_dst, namespace_dst);
+            prj_dot.listPropertyGroup[0].listCopyLocalLockFileAssemblies.Add(new Project.PropertyGroup.CopyLocalLockFileAssemblies { value = true });
 
             foreach (var skipReference in skipReferences)
             {
