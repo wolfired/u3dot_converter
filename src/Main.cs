@@ -155,33 +155,36 @@ namespace com.wolfired.u3dot_converter
                 return;
             }
 
-            var prj_u3d = Project.Load(csproj_file_src, namespace_src);
             var prj_dot = Project.Load(csproj_file_dst, namespace_dst);
             prj_dot.listPropertyGroup[0].listCopyLocalLockFileAssemblies.Add(new Project.PropertyGroup.CopyLocalLockFileAssemblies { value = true });
 
-            foreach (var skipReference in skipReferences)
+            if (File.Exists(csproj_file_src))
             {
-                foreach (var ig in prj_u3d.listItemGroup)
+                var prj_u3d = Project.Load(csproj_file_src, namespace_src);
+                foreach (var skipReference in skipReferences)
                 {
-                    for (int i = ig.listReference.Count - 1; i >= 0; --i)
+                    foreach (var ig in prj_u3d.listItemGroup)
                     {
-                        if (ig.listReference[i].Include == skipReference)
+                        for (int i = ig.listReference.Count - 1; i >= 0; --i)
                         {
-                            ig.listReference.RemoveAt(i);
+                            if (ig.listReference[i].Include == skipReference)
+                            {
+                                ig.listReference.RemoveAt(i);
+                            }
                         }
-                    }
-                    for (int i = ig.listProjectReference.Count - 1; i >= 0; --i)
-                    {
-                        if (ig.listProjectReference[i].Include == skipReference)
+                        for (int i = ig.listProjectReference.Count - 1; i >= 0; --i)
                         {
-                            ig.listProjectReference.RemoveAt(i);
+                            if (ig.listProjectReference[i].Include == skipReference)
+                            {
+                                ig.listProjectReference.RemoveAt(i);
+                            }
                         }
                     }
                 }
-            }
 
-            prj_dot.listItemGroup.AddRange(prj_u3d.listItemGroup);
-            prj_dot.listPropertyGroup.AddRange(prj_u3d.listPropertyGroup);
+                prj_dot.listItemGroup.AddRange(prj_u3d.listItemGroup);
+                prj_dot.listPropertyGroup.AddRange(prj_u3d.listPropertyGroup);
+            }
 
             prj_dot.Save(csproj_file_dst);
             // File.WriteAllText(csproj_file_dst, prj_dot.ToXMLString());
